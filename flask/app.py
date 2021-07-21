@@ -12,7 +12,8 @@ MYSQL_HOST=os.getenv("MYSQL_HOST")
 MYSQL_PORT=os.getenv("MYSQL_PORT")
 MYSQL_DB=os.getenv("MYSQL_DB")
 
-app.config["SQLALCHEMY_DATABASE_URI"] = f"mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DB}"
+#app.config["SQLALCHEMY_DATABASE_URI"] = f"mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DB}"
+app.config["SQLALCHEMY_DATABASE_URI"] = f"mysql+pymysql://root:my-secret-pw@127.0.0.1:3306/user"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
@@ -32,8 +33,12 @@ class User(db.Model):
 
     def to_dict(self):
         dictionary = {}
-        for column in self.__table__.columns:
-            dictionary[column.name] = getattr(self, column.name)
+        dictionary["name"] = getattr(self, "name")
+        dictionary["job_title"] = getattr(self, "job_title")
+        dictionary["communicate_information"] = { 
+            "email": getattr(self, "email"),
+            "mobile": getattr(self, "mobile")
+        }
         return dictionary
 
 @app.route("/")

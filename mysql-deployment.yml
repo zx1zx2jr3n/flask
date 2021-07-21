@@ -18,13 +18,15 @@ spec:
       containers:
       - name: mysql
         image: mysql
-        imagePullPolicy: Never
+        imagePullPolicy: Always
         env:
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
             secretKeyRef:
               name: flask-secrets
               key: MYSQL_PASSWORD
+        - name: MYSQL_DATABASE
+          value: user
         ports:
         - containerPort: 3306
           name: db-container
@@ -49,7 +51,6 @@ spec:
   ports:
   - port: 3306
     protocol: TCP
-    nodePort: 33306
     name: mysql
   selector:
     app: db

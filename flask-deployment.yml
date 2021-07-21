@@ -17,8 +17,8 @@ spec:
     spec:
       containers:
         - name: flask
-          image: flask
-          imagePullPolicy: Never
+          image: gcr.io/regal-muse-320405/flask:v1
+          imagePullPolicy: Always
           ports:
             - containerPort: 5000
           env:
@@ -32,7 +32,7 @@ spec:
             - name: MYSQL_HOST
               value: mysql
             - name: MYSQL_PORT
-              value: 33306
+              value: "3306"
             - name: MYSQL_DB
               value: user
 
