@@ -1,0 +1,51 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-deployment
+  labels:
+    app: flask
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: flask
+  template:
+    metadata:
+      labels:
+        app: flask
+    spec:
+      containers:
+        - name: flask
+          image: flask
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5000
+          env:
+            - name: MYSQL_USER
+              value: root
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: flask-secrets
+                  key: MYSQL_PASSWORD
+            - name: MYSQL_HOST
+              value: mysql
+            - name: MYSQL_PORT
+              value: 33306
+            - name: MYSQL_DB
+              value: user
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-service
+spec:
+  ports:
+  - port: 5000
+    protocol: TCP
+    targetPort: 5000
+  selector:
+    app: flask
+  type: LoadBalancer
